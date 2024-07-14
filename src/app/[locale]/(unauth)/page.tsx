@@ -1,92 +1,57 @@
-import { getTranslations } from 'next-intl/server';
+'use client';
 
-import { Sponsors } from '@/components/Sponsors';
-
-export async function generateMetadata(props: { params: { locale: string } }) {
-  const t = await getTranslations({
-    locale: props.params.locale,
-    namespace: 'Index',
-  });
-
-  return {
-    title: t('meta_title'),
-    description: t('meta_description'),
-  };
-}
+import axios from 'axios';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 export default function Index() {
+  const [data, setData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          'https://pantip-api-test.vercel.app/pantip',
+        );
+        setData(response?.data?.data);
+      } catch (error) {
+        //
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <>
-      <p>
-        Looking for a SaaS Boilerplate?{' '}
-        <a
-          className="text-blue-700 hover:border-b-2 hover:border-blue-700"
-          href="https://nextjs-boilerplate.com/pro-saas-starter-kit"
-        >
-          Next.js Boilerplate SaaS
-        </a>{' '}
-        can help you build one.
-      </p>
-      <p>
-        Follow{' '}
-        <a
-          className="text-blue-700 hover:border-b-2 hover:border-blue-700"
-          href="https://twitter.com/ixartz"
-          target="_blank"
-        >
-          @Ixartz on Twitter
-        </a>{' '}
-        for updates and more information about the boilerplate.
-      </p>
-      <p>
-        Our sponsors&apos; exceptional support has made this project possible.
-        Their services integrate seamlessly with the boilerplate, and we
-        recommend trying them out.
-      </p>
-      <h2 className="mt-5 text-2xl font-bold">Sponsors</h2>
-      <Sponsors />
-      <h2 className="mt-5 text-2xl font-bold">
-        Boilerplate Code for Your Next.js Project with Tailwind CSS
-      </h2>
-      <p className="text-base">
-        <span role="img" aria-label="rocket">
-          🚀
-        </span>{' '}
-        Next.js Boilerplate is a developer-friendly starter code for Next.js
-        projects, built with Tailwind CSS, and TypeScript.{' '}
-        <span role="img" aria-label="zap">
-          ⚡️
-        </span>{' '}
-        Made with developer experience first: Next.js, TypeScript, ESLint,
-        Prettier, Husky, Lint-Staged, Jest (replaced by Vitest), Testing
-        Library, Commitlint, VSCode, PostCSS, Tailwind CSS, Authentication with{' '}
-        <a
-          className="text-blue-700 hover:border-b-2 hover:border-blue-700"
-          href="https://clerk.com?utm_source=github&amp;utm_medium=sponsorship&amp;utm_campaign=nextjs-boilerplate"
-          target="_blank"
-        >
-          Clerk
-        </a>
-        , Database with DrizzleORM (PostgreSQL, SQLite, and MySQL), Error
-        Monitoring with{' '}
-        <a
-          className="text-blue-700 hover:border-b-2 hover:border-blue-700"
-          href="https://sentry.io/for/nextjs/?utm_source=github&amp;utm_medium=paid-community&amp;utm_campaign=general-fy25q1-nextjs&amp;utm_content=github-banner-nextjsboilerplate-logo"
-          target="_blank"
-        >
-          Sentry
-        </a>
-        , Logging with Pino.js and Log Management with{' '}
-        <a
-          className="text-blue-700 hover:border-b-2 hover:border-blue-700"
-          href="https://betterstack.com/?utm_source=github&amp;utm_medium=sponsorship&amp;utm_campaign=next-js-boilerplate"
-          target="_blank"
-        >
-          Better Stack
-        </a>
-        , Monitoring as Code with Checkly, Storybook, Multi-language (i18n), and
-        more.
-      </p>
-    </>
+    <div className="grid grid-cols-12 gap-4">
+      {data?.realtime?.data?.length > 0 &&
+        data?.realtime?.data?.map(
+          (item: any) =>
+            item?.title && (
+              <div
+                key={item.id}
+                className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2"
+              >
+                <div className="flex flex-col justify-center">
+                  <Image
+                    src={item?.thumbnail_url || '/assets/images/no-image.jpg'}
+                    className="h-[288px] w-full rounded-md"
+                    alt="blog"
+                    width={300}
+                    height={288}
+                    loading="lazy"
+                  />
+                  <div className="font-semibold">{item?.title}</div>
+                  <div>
+                    {item?.tags?.length > 0 &&
+                      item?.tags
+                        ?.map((val: any) => val?.name || '')
+                        ?.join(', ')}
+                  </div>
+                </div>
+              </div>
+            ),
+        )}
+    </div>
   );
 }
