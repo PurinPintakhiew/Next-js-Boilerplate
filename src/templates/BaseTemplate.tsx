@@ -39,11 +39,12 @@ const BaseTemplate = (props: { children: React.ReactNode }) => {
 
   useEffect(() => {
     updateScrollButtons();
-    scrollRef?.current?.addEventListener('scroll', updateScrollButtons);
+    const currentScrollRef = scrollRef.current;
+    currentScrollRef?.addEventListener('scroll', updateScrollButtons);
     window.addEventListener('resize', updateScrollButtons);
 
     return () => {
-      scrollRef?.current?.removeEventListener('scroll', updateScrollButtons);
+      currentScrollRef?.removeEventListener('scroll', updateScrollButtons);
       window.removeEventListener('resize', updateScrollButtons);
     };
   }, []);
@@ -79,27 +80,73 @@ const BaseTemplate = (props: { children: React.ReactNode }) => {
         ref={headerRef}
         className="sticky inset-x-0 top-0 w-full bg-white"
       >
-        <div className="hidden flex-col items-center border-b px-[40px] py-[20px] sm:flex md:px-[80px]">
-          <div className="flex w-full flex-wrap justify-between">
-            <h1 className="text-2xl font-bold text-red-500">
+        <div className="flex flex-col items-center border-b px-[40px] py-4 md:px-[80px]">
+          <div className="flex w-full flex-wrap items-center justify-between gap-2">
+            <h1 className="hidden text-2xl font-bold text-red-500 sm:block">
               <Link href="/">{AppConfig.name}</Link>
             </h1>
-            <div className="flex items-center">
+            <div className="hidden items-center justify-center gap-2 rounded-full border p-2 shadow hover:shadow-md lg:flex">
               <Link
                 href="/"
-                className="flex px-4 py-2 font-semibold hover:rounded-full hover:bg-slate-100"
+                className="flex border-r px-4 font-semibold text-gray-500 hover:text-black"
+              >
+                หน้าแรก
+              </Link>
+              <Link
+                href="/"
+                className="flex border-r px-4 font-semibold text-gray-500 hover:text-black"
+              >
+                My Feed
+              </Link>
+              <Link
+                href="/"
+                className="flex border-r px-4 font-semibold text-gray-500 hover:text-black"
+              >
+                Pantip Hitz
+              </Link>
+              <Link
+                href="/"
+                className="flex border-r px-4 font-semibold text-gray-500 hover:text-black"
+              >
+                Explore
+              </Link>
+              <button
+                type="button"
+                className="rounded-full bg-[#FF385C] p-2"
+                aria-label="Search"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="3"
+                  stroke="white"
+                  className="size-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="hidden items-center lg:flex">
+              <Link
+                href="/"
+                className="flex px-4 py-2 font-semibold hover:rounded-full hover:bg-neutral-100"
               >
                 ตั้งกระทู้
               </Link>
               <Link
                 href="/"
-                className="flex px-4 py-2 font-semibold hover:rounded-full hover:bg-slate-100"
+                className="flex px-4 py-2 font-semibold hover:rounded-full hover:bg-neutral-100"
               >
                 คอมมูนิตี้
               </Link>
               <button
                 type="button"
-                className="b flex items-center gap-4 rounded-full border px-4 py-2 hover:bg-slate-100"
+                className="flex items-center gap-4 rounded-full border p-2 hover:shadow-md"
               >
                 <Image
                   height={16}
@@ -107,6 +154,7 @@ const BaseTemplate = (props: { children: React.ReactNode }) => {
                   src="/assets/images/homes/menu.svg"
                   alt="menu"
                   loading="lazy"
+                  className="ms-2"
                 />
                 <Image
                   height={32}
@@ -117,64 +165,43 @@ const BaseTemplate = (props: { children: React.ReactNode }) => {
                 />
               </button>
             </div>
+            <button
+              type="button"
+              className="flex w-full items-center gap-2 rounded-full border px-4 py-2 sm:w-auto lg:hidden"
+              aria-label="Search on Pantip"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="3"
+                stroke="black"
+                className="size-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                />
+              </svg>
+              ค้นหาบน Pantip
+            </button>
           </div>
-          <div className="flex justify-center gap-2 rounded-full border p-2">
-            <Link
-              href="/"
-              className="flex border-r px-4 py-2 font-semibold hover:rounded-full hover:bg-slate-100"
-            >
-              หน้าแรก
-            </Link>
-            <Link
-              href="/"
-              className="flex border-r px-4 py-2 font-semibold hover:rounded-full hover:bg-slate-100"
-            >
-              My Feed
-            </Link>
-            <Link
-              href="/"
-              className="flex border-r px-4 py-2 font-semibold hover:rounded-full hover:bg-slate-100"
-            >
-              Pantip Hitz
-            </Link>
-            <Link
-              href="/"
-              className="flex border-r px-4 py-2 font-semibold hover:rounded-full hover:bg-slate-100"
-            >
-              Explore
-            </Link>
-            <input type="search" className="rounded-full border" />
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center border-b px-[40px] py-[20px] sm:hidden md:px-[80px]">
-          <button
-            type="button"
-            className="flex items-center justify-center gap-2 rounded-full border px-4 py-2"
-          >
-            <Image
-              height={16}
-              width={16}
-              src="/assets/images/homes/search.svg"
-              alt="menu"
-              loading="lazy"
-            />
-            <div className="flex flex-col">ค้นหาบน Pantip</div>
-          </button>
         </div>
 
         <div className="relative w-full px-[40px] pt-2 shadow lg:px-[80px]">
           {canScrollLeft && (
             <button
               type="button"
-              className="absolute left-0 top-1/2 -translate-y-1/2 rounded-full bg-gray-200 p-2 shadow-md lg:left-[40px]"
+              className="absolute left-0 top-1/2 -translate-y-1/2 rounded-full border p-2 hover:shadow-lg lg:left-[40px]"
               onClick={() => scroll('left')}
+              aria-label="Scroll left"
             >
               <Image
                 height={12}
                 width={12}
                 src="/assets/images/homes/previous.svg"
-                alt="menu"
+                alt="previous"
                 loading="lazy"
               />
             </button>
@@ -190,13 +217,13 @@ const BaseTemplate = (props: { children: React.ReactNode }) => {
                 <div key={category.title} className="shrink-0">
                   <Link
                     href="/"
-                    className="my-2 flex flex-col items-center justify-center border-b-2 border-transparent p-1 text-black hover:border-slate-200"
+                    className="my-2 flex flex-col items-center justify-center border-b-2 border-transparent p-1 text-black hover:border-neutral-200"
                   >
                     <Image
                       height={24}
                       width={24}
                       src={category?.icon}
-                      alt="room"
+                      alt={category?.title}
                       loading="lazy"
                     />
                     <div>{category?.title}</div>
@@ -208,14 +235,15 @@ const BaseTemplate = (props: { children: React.ReactNode }) => {
           {canScrollRight && (
             <button
               type="button"
-              className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full bg-gray-200 p-2 shadow-md lg:right-[40px]"
+              className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full border p-2 hover:shadow-lg lg:right-[40px]"
               onClick={() => scroll('right')}
+              aria-label="Scroll right"
             >
               <Image
                 height={12}
                 width={12}
                 src="/assets/images/homes/next.svg"
-                alt="menu"
+                alt="next"
                 loading="lazy"
               />
             </button>
