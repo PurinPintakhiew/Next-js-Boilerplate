@@ -256,7 +256,7 @@ const BaseTemplate = (props: { children: React.ReactNode }) => {
       </main>
 
       <footer className="bg-[#F7F7F7] text-center text-sm">
-        <div className="mt-10 flex flex-col items-center justify-between border-t border-gray-300 px-[40px] py-8 sm:flex-row lg:px-[80px]">
+        <div className="mt-10 flex flex-col items-center justify-between gap-5 border-t border-gray-300 px-[40px] py-8 sm:flex-row lg:px-[80px]">
           <div>
             © Copyright {new Date().getFullYear()} {AppConfig.name}.
           </div>
